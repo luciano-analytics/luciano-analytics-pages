@@ -1,0 +1,27 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout the repository
+      uses: actions/checkout@v2
+
+    - name: Deploy to GitHub Pages
+      env:
+        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        git clone --single-branch --branch main https://$ACCESS_TOKEN@github.com/luciano-analytics/luciano-analytics-pages.git public
+        rsync -av --delete . public/
+        cd public
+        git add .
+        git commit -m "Deploy from private repo"
+        git push origin main
