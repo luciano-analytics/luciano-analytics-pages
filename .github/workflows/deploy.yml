@@ -18,11 +18,10 @@ jobs:
       - name: Prepare deployment
         run: |
           mkdir -p build
-          shopt -s extglob
-          cp -r !(build|.git|.github) build/
+          rsync -av --progress . ./build --exclude build --exclude .git --exclude .github
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GH_TOKEN }}
           publish_dir: ./build  # Diretório temporário onde os arquivos serão copiados
