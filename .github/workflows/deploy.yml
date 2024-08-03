@@ -15,16 +15,14 @@ jobs:
         with:
           persist-credentials: false
 
-      # Copiar arquivos diretamente para o diretório de build
       - name: Prepare deployment
         run: |
-          mkdir build
-          cp -r * build/
-          cp -r .* build/
+          mkdir -p build
+          shopt -s extglob
+          cp -r !(build|.git|.github) build/
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build  # Diretório temporário onde os arquivos serão copiados
- 
